@@ -1,5 +1,10 @@
-import { Stack } from "expo-router";
+import { Slot } from 'expo-router';  // Добавляем импорт Slot
+import { MarkerProvider } from '../context/MarkerContext';
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <MarkerProvider>
+      <Slot />
+    </MarkerProvider>
+  );
 }

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, Button, FlatList, Alert, Image, StyleSheet } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
-import { ImageData, MarkerData, RootStackParamList } from "../../types";
+import { ImageData, RootStackParamList } from "../../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useMarkers } from "../../context/MarkerContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "MarkerDetails">;
 
@@ -11,14 +12,18 @@ export default function MarkerDetails() {
   const route = useRoute<Props["route"]>();
   const navigation = useNavigation();
   const { id } = route.params;
+  const { markers, addImageToMarker, removeImageFromMarker } = useMarkers();
 
-  // В реальном проекте получаем из хранилища
-  const [marker, setMarker] = useState<MarkerData>({
-    id,
-    latitude: 55.75,
-    longitude: 37.61,
-    images: [],
-  });
+  const marker = markers.find(m => m.id === id);
+
+  if (!marker) {
+    return (
+      <View style={styles.container}>
+        <Text>Маркер не найден</Text>
+        <Button title="Назад к карте" onPress={() => navigation.goBack()} />
+      </View>
+    );
+  }
 
   const addImage = async () => {
     try {
@@ -32,10 +37,7 @@ export default function MarkerDetails() {
           id: Date.now().toString(),
           uri: result.assets[0].uri,
         };
-        setMarker((prev) => ({
-          ...prev,
-          images: [...prev.images, newImage],
-        }));
+        addImageToMarker(marker.id, newImage);
       }
     } catch (error) {
       Alert.alert("Ошибка", "Не удалось выбрать изображение");
@@ -43,10 +45,7 @@ export default function MarkerDetails() {
   };
 
   const deleteImage = (imageId: string) => {
-    setMarker((prev) => ({
-      ...prev,
-      images: prev.images.filter((img) => img.id !== imageId),
-    }));
+    removeImageFromMarker(marker.id, imageId);
   };
 
   return (

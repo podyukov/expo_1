@@ -1,26 +1,25 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Alert } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import MapView, { Marker, LongPressEvent } from 'react-native-maps';
 import { useRouter } from 'expo-router';
+import { useMarkers } from '../context/MarkerContext';
 
 export default function Index() {
-  const [markers, setMarkers] = useState<{ id: string; latitude: number; longitude: number }[]>([]);
+  const { markers, addMarker } = useMarkers();
   const router = useRouter();
 
-  // Обработчик для добавления маркера по долгому нажатию
   const handleLongPress = (e: LongPressEvent) => {
+    console.log('Long press detected', e.nativeEvent.coordinate); // Добавьте лог
     const newMarker = {
-      id: `${Date.now()}`, // Уникальный идентификатор для маркера
+      id: `${Date.now()}`,
       latitude: e.nativeEvent.coordinate.latitude,
       longitude: e.nativeEvent.coordinate.longitude,
     };
-
-    setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
+    console.log('New marker:', newMarker); // Лог нового маркера
+    addMarker(newMarker);
   };
 
-  // Обработчик нажатия на маркер, переход на экран с деталями
   const handleMarkerPress = (id: string) => {
-    // Навигация на экран с деталями маркера
     router.push(`/marker/${id}`);
   };
 
@@ -36,13 +35,16 @@ export default function Index() {
           longitudeDelta: 0.0421,
         }}
       >
-        {markers.map((marker) => (
-          <Marker
-            key={marker.id}
-            coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-            onPress={() => handleMarkerPress(marker.id)} // Переход на экран маркера
-          />
-        ))}
+        {markers.map((marker) => {
+          console.log('Rendering marker:', marker); // Лог каждого маркера
+          return (
+            <Marker
+              key={marker.id}
+              coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+              onPress={() => handleMarkerPress(marker.id)}
+            />
+          );
+        })}
       </MapView>
     </View>
   );
