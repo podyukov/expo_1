@@ -8,15 +8,16 @@ import { useMarkers } from "../../context/MarkerContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "MarkerDetails">;
 
+// Отображает детали маркера, включая его изображения и позволяет управлять
 export default function MarkerDetails() {
   const route = useRoute<Props["route"]>();
   const navigation = useNavigation();
-  const { id } = route.params;
-  const { markers, addImageToMarker, removeImageFromMarker } = useMarkers();
+  const { id } = route.params; // получаем id маркера
+  const { markers, addImageToMarker, removeImageFromMarker } = useMarkers(); // получаем маркеры и функции для работы с ними
 
-  const marker = markers.find(m => m.id === id);
+  const marker = markers.find(m => m.id === id); // ищем маркер по id
 
-  if (!marker) {
+  if (!marker) { // если маркер не найден
     return (
       <View style={styles.container}>
         <Text>Маркер не найден</Text>
@@ -25,30 +26,30 @@ export default function MarkerDetails() {
     );
   }
 
-  const addImage = async () => {
+  const addImage = async () => { // добавление изображения к маркеру
     try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        quality: 1,
+      const result = await ImagePicker.launchImageLibraryAsync({ // открытие галереи
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, // только изображения
+        quality: 1, // максимальное качество
       });
 
-      if (!result.canceled && result.assets?.length) {
-        const newImage: ImageData = {
-          id: Date.now().toString(),
-          uri: result.assets[0].uri,
+      if (!result.canceled && result.assets?.length) { // если пользователь выбрал изображение
+        const newImage: ImageData = { // создание нового объекта изображения
+          id: Date.now().toString(), // уникальный id
+          uri: result.assets[0].uri, // uri изображения
         };
-        addImageToMarker(marker.id, newImage);
+        addImageToMarker(marker.id, newImage); // добавление изображения к маркеру
       }
-    } catch (error) {
+    } catch (error) { // если произошла ошибка
       Alert.alert("Ошибка", "Не удалось выбрать изображение");
     }
   };
 
-  const deleteImage = (imageId: string) => {
+  const deleteImage = (imageId: string) => { // удаление изображения из маркера по id
     removeImageFromMarker(marker.id, imageId);
   };
 
-  return (
+  return ( // отображение деталей маркера
     <View style={styles.container}>
       <Text>Маркер ID: {marker.id}</Text>
       <Text>Широта: {marker.latitude}</Text>
@@ -72,7 +73,7 @@ export default function MarkerDetails() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ // стили для компонентов
   container: { flex: 1, padding: 20 },
   imageBlock: { marginVertical: 10 },
   image: { width: 200, height: 200, borderRadius: 10 },

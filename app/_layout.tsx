@@ -1,4 +1,4 @@
-import { Slot } from 'expo-router';  // Добавляем импорт Slot
+import { Slot } from 'expo-router';
 import { MarkerProvider } from '../context/MarkerContext';
 
 export default function RootLayout() {

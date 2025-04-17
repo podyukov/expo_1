@@ -1,50 +1,65 @@
-# Welcome to your Expo app 👋
+# Технологии разработки приложений для мобильных платформ. Подюков Илья. ФИТ-2-2024 НМ. ЛР-1
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Инструкция по установке
 
-## Get started
+##### Создаю пустое приложение
 
-1. Install dependencies
+`npx create-expo-app podyukov_expo_1`
 
-   ```bash
-   npm install
-   ```
+`npm run reset-project`
 
-2. Start the app
 
-   ```bash
-    npx expo start
-   ```
 
-In the output, you'll find options to open the app in a
+##### Устанавливаю необходимые пакеты
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+`npm install`
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+`npx expo install react-native-maps expo-image-picker expo-router`
 
-## Get a fresh project
 
-When you're ready, run:
 
-```bash
-npm run reset-project
-```
+##### Запуск приложения
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+`npx expo start`
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Краткое описание решения
 
-## Join the community
+Определяю types.ts, тремя интерфейсами:
 
-Join our community of developers creating universal apps.
+- MarkerData - описывает структуру данных маркера (id, широта, долгота, массив изображений, привязанных к маркеру)
+- ImageData - описывает структуру изображений (id, путь к изображению)
+- RootStackParamList - описывает структуру навигации (Map, MarkerDetails), и нужен для обеспечения типобезопасности при навигации между экранами
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+Главный файл экрана - index.tsx, является основным компонентом экрана карты в приложении. Он отвечает за:
+
+1. Отображение интерактивной карты с маркерами
+2. Обработку действий пользователя (добавление маркеров по долгому нажатию, переход к деталям маркера)
+3. Взаимодействие с контекстом маркеров (MarkerContext) и навигацией (expo-router)
+
+Для работы с картой используется react-native-maps, навигация реализована через expo-router
+
+
+
+MarkerContext.tsx реализует глобальное хранение и управление маркерами и их изображениями, и обеспечивает:
+
+- Хранение массива маркеров
+- Добавление новых маркеров
+- Привязка изображений к маркерам
+- Удаление изображений
+
+
+
+Файл [id].tsx - это экран деталей маркера, который:
+
+1. Получает id маркера из параметров навигации и находит его в глобальном состоянии (MarkerContext)
+2. Отображает координаты маркера и прикреплённые изображения
+3. Позволяет добавлять новые изображения в маркер через галерею, либо удалять ранее добавленные
+
+Использует expo-image-picker для выбора
+
+
+
