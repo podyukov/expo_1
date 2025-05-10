@@ -59,7 +59,6 @@ export default function MarkerDetails() {
 
       <FlatList
         data={marker.images}
-        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.imageBlock}>
             <Image source={{ uri: item.uri }} style={styles.image} />
