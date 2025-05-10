@@ -22,7 +22,7 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <MapView // рендер карты
         style={styles.map}
         onLongPress={handleLongPress}
