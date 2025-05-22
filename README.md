@@ -62,10 +62,5 @@
 Использует expo-image-picker для выбора изображений
 
 ## Демонстрация работы программы
-
-Смотреть файл "demonstration.mkv"
-
-https://github.com/podyukov/expo_1/blob/main/demonstration.mkv
-
-
+https://github.com/user-attachments/assets/82e28f99-18e3-4e04-ac8b-bcb1f68fe1e1
 
